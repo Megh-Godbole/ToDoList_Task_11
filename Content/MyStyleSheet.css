@@ -1,0 +1,78 @@
+﻿ul{
+    list-style-type: none;
+    padding: 0;
+    border: 1px solid #ddd;
+}
+
+ul li {
+    padding: 8px 16px;
+    border-bottom: 1px solid #ddd;
+}
+
+    ul li:last-child {
+        border-bottom: none;
+    }
+
+#liButton {
+    border: 0px;
+    background-color: white;
+    color: red;
+    float: right;
+}
+
+.tr_style {
+    border-bottom-width: 1px;
+    border-color: gray;
+}
+
+.style1 {
+    font-size: xx-large;
+}
+
+.style2 {
+    font-size: small;
+    color: gray;
+}
+
+.hr_style {
+    width: 450px;
+    height: 1px;
+    text-align: left;
+    margin-left: 0px;
+    color: black;
+}
+
+#textTask {
+    border: hidden;
+    width: 442px;
+    outline: none;
+}
+
+table {
+    width: 30%;
+    border-style: ridge;
+    border-width: 1px;
+    border-color: gainsboro;
+    padding: 10px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#btnAddTask {
+    border: none;
+    box-shadow: inset;
+    background-color: #0dd1ad;
+    color: white;
+    width: 100px;
+    height: 30px;
+}
+
+#btnClearTask {
+    border: none;
+    box-shadow: inset;
+    background-color: black;
+    color: white;
+    width: 100px;
+    height: 30px;
+}
+
