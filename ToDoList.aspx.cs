@@ -12,7 +12,8 @@ using System.Web.UI.WebControls;
 namespace ToDoList_Task___11
 {
     public partial class ToDoList : System.Web.UI.Page
-    {
+    { 
+        
         protected void Page_Load(object sender, EventArgs e)
         {
 
@@ -20,37 +21,86 @@ namespace ToDoList_Task___11
 
         [WebMethod]
         [ScriptMethod(ResponseFormat = ResponseFormat.Json, UseHttpGet = true)]
-        public static Task[] List()
+        public static List<Task> List()
         {
-            StreamReader reader = new StreamReader(@"C:\Users\Megh.Godbole\source\repos\ToDoList Task_11\Script\task.json");
+            var todolist = new ToDoList();
+            StreamReader reader = new StreamReader(todolist.Path());
             string json = reader.ReadToEnd();
-            Task[] ToDoTasks = JsonConvert.DeserializeObject<Task[]>(json);
+            List<Task> ToDoTasks = JsonConvert.DeserializeObject<List<Task>>(json);
+            reader.Close();
 
             return ToDoTasks;
         }
 
         [WebMethod]
-        [ScriptMethod(ResponseFormat = ResponseFormat.Json, UseHttpGet = false)]
-        public static Task[] Manage(string task)
+        public static List<Task> Add(string task)
         {
-            StreamReader reader = new StreamReader(@"C:\Users\Megh.Godbole\source\repos\ToDoList Task_11\Script\task.json");
+            var todolist = new ToDoList();
+            StreamReader reader = new StreamReader(todolist.Path());
             string json = reader.ReadToEnd();
-            Task[] ToDoTasks = JsonConvert.DeserializeObject<Task[]>(json);
-
-            StreamWriter writer = new StreamWriter(@"C:\Users\Megh.Godbole\source\repos\ToDoList Task_11\Script\task.json");
+            List<Task> ToDoTasks = JsonConvert.DeserializeObject<List<Task>>(json);
 
             Task NewTask = new Task();
-            NewTask.TaskID = ToDoTasks.Length+1;
+            if (ToDoTasks.Count == 0)
+            {
+                NewTask.TaskID = 1;
+            }
+            else
+            {
+                NewTask.TaskID = ToDoTasks[ToDoTasks.Count - 1].TaskID + 1;
+            }
             NewTask.TaskString = task;
-            ToDoTasks[ToDoTasks.Length+1] = NewTask;
+            ToDoTasks.Add(NewTask);
+            reader.Close();
+
+            StreamWriter writer = new StreamWriter(todolist.Path());
             writer.WriteLine(JsonConvert.SerializeObject(ToDoTasks));
-            
+            writer.Close();
             return ToDoTasks;
         }
-        public class Task
+        [WebMethod]
+        public static List<Task> Delete(string task)
         {
-            public int TaskID { get; set; }
-            public string TaskString { get; set; }
+            var todolist = new ToDoList();
+            StreamReader reader = new StreamReader(todolist.Path());
+            string json = reader.ReadToEnd();
+            List<Task> ToDoTasks = JsonConvert.DeserializeObject<List<Task>>(json);
+            foreach (var item in ToDoTasks)
+            {
+                if (item.TaskString == task)
+                {
+                    ToDoTasks.Remove(item);
+                    break;
+                }
+            }
+            reader.Close();
+
+            StreamWriter writer = new StreamWriter(todolist.Path());
+            writer.WriteLine(JsonConvert.SerializeObject(ToDoTasks));
+            writer.Close();
+            return ToDoTasks;
+        }
+
+        [WebMethod]
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json, UseHttpGet = true)]
+        public static List<Task> DeleteAll()
+        {
+            var todolist = new ToDoList();
+            StreamReader reader = new StreamReader(todolist.Path());
+            string json = reader.ReadToEnd();
+            List<Task> ToDoTasks = JsonConvert.DeserializeObject<List<Task>>(json);
+            ToDoTasks.Clear();
+            reader.Close();
+
+            StreamWriter writer = new StreamWriter(todolist.Path());
+            writer.WriteLine(JsonConvert.SerializeObject(ToDoTasks));
+            writer.Close();
+            return ToDoTasks;
+        }
+        public string Path()
+        {
+            string jsonPath = Server.MapPath("/Script/task.json");
+            return jsonPath;
         }
     }
 }

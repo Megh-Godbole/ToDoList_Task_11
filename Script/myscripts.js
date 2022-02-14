@@ -11,20 +11,19 @@ function addTask(e) {
     }
     else {
         var xhr = new XMLHttpRequest();
-        xhr.open('POST', window.location.href + "/Manage", true);
-        var object = { "TaskString": document.getElementById('textTask').value };
+        xhr.open('POST', window.location.href + "/Add", true);
+        var task = document.getElementById('textTask').value;
+        var data = `{task :"${task}"}`;
         
-
         xhr.setRequestHeader("Content-Type", "application/json");
         xhr.responseType = "json";
         xhr.onload = function () {
             if (this.status === 200) {
-                var res = (this.response.d);
-                console.log(res);
                 Check();
-            }  
+            }
         }
-        xhr.send(object);
+        xhr.send(data);
+        document.getElementById('textTask').value = '';
     }
     e.preventDefault();
 }
@@ -37,7 +36,19 @@ ul.addEventListener('click', cancelTask);
 //Cancel Task Function
 function cancelTask(e) {
     if (e.target.id === 'liButton' && confirm('Are You Sure ??')) {
-        e.target.parentElement.remove();
+
+        var xhr = new XMLHttpRequest();
+        var task = e.target.previousSibling.textContent;
+        xhr.open('POST', window.location.href + '/Delete', true);
+        var data = `{task :"${task}"}`;
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.responseType = "json";
+        xhr.onload = function () {
+            if (this.status === 200) {
+                Check();
+            }
+        }
+        xhr.send(data);
     }
     e.preventDefault();
 }
@@ -50,16 +61,23 @@ btnClearTask.addEventListener('click', clearTask);
 //Clear Task Function
 function clearTask(e) {
     if (confirm('Are You Sure ??')) {
-        var listItems = document.querySelectorAll('li');
-
-        for (var i = 0; i < listItems.length; i++) {
-            listItems[i].remove();
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', window.location.href + "/DeleteAll", true);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.responseType = "json";
+        xhr.onload = function () {
+            if (this.status === 200) {
+                Check();
+            }
         }
+        xhr.send();
     }
     e.preventDefault();
 }
 
+//On Load Event Listener
 window.addEventListener('load', Check);
+//Load Function
 function Check(event) {
     var xhr = new XMLHttpRequest();
     xhr.open('GET', window.location.href + "/List", true);
@@ -67,18 +85,26 @@ function Check(event) {
     xhr.responseType = "json";
     xhr.onload = function () {
         if (this.status === 200) {
+
+            var listItems = document.querySelectorAll('li');
+            for (var i = 0; i < listItems.length; i++) {
+                listItems[i].remove();
+            }
             var object = (this.response.d);
             for (var i = 0; i < object.length; i++) {
 
                 //Create list Item
                 const li = document.createElement('li');
-                li.appendChild(document.createTextNode(object[i].TaskString));
+                const span = document.createElement('span');
+                span.id = 'TaskText';
+                span.appendChild(document.createTextNode(object[i].TaskString));
+                li.appendChild(span);
 
                 //Create Cancel Button
-                const btnCancel = document.createElement('button');
-                btnCancel.id = 'liButton';
-                btnCancel.href = '#';
-                btnCancel.textContent = 'X';
+                const btnCancel = document.createElement('i');
+                btnCancel.className = 'material-icons';
+                btnCancel.style = 'color:red';
+                btnCancel.textContent = 'Cancel';
                 li.appendChild(btnCancel);
 
                 const ul = document.getElementsByTagName('ul')[0];

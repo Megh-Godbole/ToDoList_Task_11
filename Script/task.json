@@ -1,10 +1,1 @@
-[ 
-{
-    "TaskID": 1,
-    "TaskString": "Walk"
-  },
-  {
-    "TaskID": 2,
-    "TaskString": "Talk"
-  }
-]
+[{"TaskID":1,"TaskString":"Walk"},{"TaskID":2,"TaskString":"Talk"}]

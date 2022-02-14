@@ -93,6 +93,9 @@
     <Compile Include="ToDoList.aspx.designer.cs">
       <DependentUpon>ToDoList.aspx</DependentUpon>
     </Compile>
+    <Compile Include="ToDoList.Task.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
