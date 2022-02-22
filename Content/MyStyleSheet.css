@@ -13,13 +13,6 @@ ul li {
         border-bottom: none;
     }
 
-#liButton {
-    border: 0px;
-    background-color: white;
-    color: red;
-    float: right;
-}
-
 .tr_style {
     border-bottom-width: 1px;
     border-color: gray;

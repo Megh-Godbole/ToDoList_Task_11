@@ -33,7 +33,7 @@ namespace ToDoList_Task___11
         }
 
         [WebMethod]
-        public static List<Task> Add(string task)
+        public static void Add(string task)
         {
             var todolist = new ToDoList();
             StreamReader reader = new StreamReader(todolist.Path());
@@ -56,10 +56,9 @@ namespace ToDoList_Task___11
             StreamWriter writer = new StreamWriter(todolist.Path());
             writer.WriteLine(JsonConvert.SerializeObject(ToDoTasks));
             writer.Close();
-            return ToDoTasks;
         }
         [WebMethod]
-        public static List<Task> Delete(string task)
+        public static void Delete(string task)
         {
             var todolist = new ToDoList();
             StreamReader reader = new StreamReader(todolist.Path());
@@ -78,12 +77,32 @@ namespace ToDoList_Task___11
             StreamWriter writer = new StreamWriter(todolist.Path());
             writer.WriteLine(JsonConvert.SerializeObject(ToDoTasks));
             writer.Close();
-            return ToDoTasks;
+        }
+        [WebMethod]
+        public static void Update(string taskNew,string taskOld)
+        {
+            var todolist = new ToDoList();
+            StreamReader reader = new StreamReader(todolist.Path());
+            string json = reader.ReadToEnd();
+            List<Task> ToDoTasks = JsonConvert.DeserializeObject<List<Task>>(json);
+            foreach (var item in ToDoTasks)
+            {
+                if (item.TaskString == taskOld)
+                {
+                    item.TaskString = taskNew;
+                    break;
+                }
+            }
+            reader.Close();
+
+            StreamWriter writer = new StreamWriter(todolist.Path());
+            writer.WriteLine(JsonConvert.SerializeObject(ToDoTasks));
+            writer.Close();
         }
 
         [WebMethod]
         [ScriptMethod(ResponseFormat = ResponseFormat.Json, UseHttpGet = true)]
-        public static List<Task> DeleteAll()
+        public static void DeleteAll()
         {
             var todolist = new ToDoList();
             StreamReader reader = new StreamReader(todolist.Path());
@@ -95,7 +114,6 @@ namespace ToDoList_Task___11
             StreamWriter writer = new StreamWriter(todolist.Path());
             writer.WriteLine(JsonConvert.SerializeObject(ToDoTasks));
             writer.Close();
-            return ToDoTasks;
         }
         public string Path()
         {
